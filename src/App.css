@@ -1,0 +1,35 @@
+.App {
+  display: flex;
+  flex-direction: row;  
+}
+
+.app-left {
+  height: 100vh;
+  width: 50%;
+}
+
+.app-inside {
+  height: 50vh;
+  width: 100%;
+  border: black solid 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: grey;
+}
+
+.app-buttons {
+  height: 50vh;
+  width: 100%;
+  border: black solid 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: grey;  
+}
+
+.app-outside {
+  height: 100vh;
+  width: 50%;
+  border: black solid 1px;
+}

@@ -1,0 +1,29 @@
+.Inside {
+    height: calc(100% - 40px);
+    width: calc(100% - 40px);
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    border: black solid 3px;
+    background: beige
+}
+
+.inside-stickman {
+    height: 100px;
+    width: 70px;
+}
+
+.inside-stickman-head {
+    height: 40px;
+    width: 40px;
+    margin-top: -98px;
+    margin-left: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.inside-stickman-head-number{
+    font-size: 30px;
+}

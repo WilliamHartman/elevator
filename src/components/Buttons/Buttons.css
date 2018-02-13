@@ -1,0 +1,51 @@
+.Buttons {
+    height: calc(100% - 40px);
+    width: calc(100% - 40px);
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    border: black solid 3px;
+    background: silver;
+}
+
+.buttons-container {
+    height: 85px;
+    width: 85px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.buttons-circle {
+    height: 65px;
+    width: 65px;
+    border-radius: 35px;
+    border: black solid 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: whitesmoke;
+}
+
+.buttons-circle-green {
+    height: 65px;
+    width: 65px;
+    border-radius: 35px;
+    border: black solid 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #7CFC00;
+}
+
+.buttons-numbers {
+    font-size: 30px;
+}
+
+button {
+    height: 30px;
+    width: 80px;
+    font-size: 20px
+}

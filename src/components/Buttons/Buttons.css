@@ -2,8 +2,8 @@
     height: calc(100% - 40px);
     width: calc(100% - 40px);
     display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
+    justify-content: center;
+    align-items: center;
     flex-wrap: wrap;
     border: black solid 3px;
     background: silver;
@@ -15,7 +15,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    
 }
 
 .buttons-circle {
@@ -44,8 +43,3 @@
     font-size: 30px;
 }
 
-button {
-    height: 30px;
-    width: 80px;
-    font-size: 20px
-}

@@ -9,7 +9,8 @@ class Skyscraper extends Component {
         super();
 
         this.state = {
-            loadFlag: false
+            loadFlag: false,
+            topFloorNumber: 19
         }
 
         this.startElevator = this.startElevator.bind(this);
@@ -19,7 +20,7 @@ class Skyscraper extends Component {
         this.moveStep = this.moveStep.bind(this);
         this.reverseStep = this.reverseStep.bind(this);
     }
-
+    
     startElevator(){
         // setInterval(this.elevatorBrains, 1000)
         this.elevatorBrains();
@@ -30,11 +31,13 @@ class Skyscraper extends Component {
     }
 
     loadStep(){
+        console.log(this.props.floor)
+        console.log(this.props.floor[this.state.topFloorNumber-1])        
         if(this.props.passengers.includes(this.props.currentFloor)){
             this.props.unloadPassengers();
         }
-        if(this.props.floor[9-this.props.currentFloor].length > 0){
-            console.log(`load passengers from floor: ${9-this.props.currentFloor}`)
+        if(this.props.floor[this.state.topFloorNumber-this.props.currentFloor].length > 0){
+            console.log(`load passengers from floor: ${this.state.topFloorNumber-this.props.currentFloor}`)
             this.props.loadPassengers();
             this.setState({loadFlag: true}, () => this.moveStep())
         } else {
@@ -56,8 +59,8 @@ class Skyscraper extends Component {
                 this.props.changeFloor('down');
                 this.props.reverseFlag();
             }
-        } else if(this.props.goingUp === false || this.props.currentFloor === 9){
-            console.log('going down or on floor 9')
+        } else if(this.props.goingUp === false || this.props.currentFloor === this.state.topFloorNumber){
+            console.log('going down or on floor this.state.topFloorNumber')
             if(this.props.passengers.some(passenger => passenger < this.props.currentFloor)){
                 console.log('passenger to floor below current')
                 this.props.changeFloor('down');
@@ -102,15 +105,26 @@ class Skyscraper extends Component {
         let floors = this.props.floor;
         let jsxFloors = floors.map( (floor, i) => {
             let jsxFloorOptions = this.props.floor.map((ele, j) => {
-                if(9-j !== i){
+                if(this.state.topFloorNumber-j !== i){
                     return <option key={j}>{j}</option>;
                 }
             })
-            if(this.props.currentFloor === 9-i){
+            let floorString = '';
+            if(floor.length > 0){
+                floorString = floor.join(', ');
+            }
+            if(this.props.currentFloor === this.state.topFloorNumber-i){
                 return (
-                    <div>
-                        {`|X| Floor ${9-i} - ${floor}`}
-                        <select onChange={e => this.updateFloor(e.target.value, i)}>
+                    <div className="skyscraper-floor">
+                        <div className="skyscraper-car-left"></div>
+                        <div className="skyscraper-car-right"></div>
+                        <div className="skyscraper-queue">
+                            {floorString}
+                        </div>
+                        <div className="skyscraper-floor-number">
+                            {`Floor ${this.state.topFloorNumber-i}`}
+                        </div>
+                        <select onChange={e => this.updateFloor(e.target.value, i)} className="skyscraper-select">
                             <option disabled selected>Choose Floor</option>   
                             {jsxFloorOptions}
                         </select>
@@ -118,9 +132,16 @@ class Skyscraper extends Component {
                 )
             }
             return (
-                <div>
-                    {`|_| Floor ${9-i} - ${floor}`}
-                    <select onChange={e => this.updateFloor(e.target.value, i)}>
+                <div className="skyscraper-floor">
+                    <div className="skyscraper-shaft-left"></div>
+                    <div className="skyscraper-shaft-right"></div>
+                    <div className="skyscraper-queue">
+                        {floorString}
+                    </div>
+                    <div className="skyscraper-floor-number">
+                        {`Floor ${this.state.topFloorNumber-i}`}
+                    </div>
+                    <select onChange={e => this.updateFloor(e.target.value, i)} className="skyscraper-select">
                         <option disabled selected>Choose Floor</option>   
                         {jsxFloorOptions}
                     </select>
@@ -130,10 +151,10 @@ class Skyscraper extends Component {
 
         return (
         <div className="Skyscraper">
-            <div className="sky-container">
+            <div className="skyscraper-container">
                 {jsxFloors}
-                <button onClick={() => this.startElevator()}>Step</button>
             </div>
+            <button onClick={() => this.startElevator()}>Step</button>
         </div>
         );
     }

@@ -1,21 +1,29 @@
+const topFloorNumber = 19;
+
+let floorInit = [];
+for(let i=0; i<=topFloorNumber; i++){
+    floorInit.push([]);
+}
+
 const initialState = {
-    floor: [
-        [],
-        [],
-        [],
-        [],
-        [],
-        [],
-        [],
-        [1],
-        [4],
-        [1,2,3,2,1]
-    ],
+    // floor: [
+    //     [],
+    //     [],
+    //     [],
+    //     [],
+    //     [],
+    //     [],
+    //     [],
+    //     [1],
+    //     [4],
+    //     [1,2,3,2,1]
+    // ],
+    floor: [...floorInit],
     currentFloor: 0,
-    passengers: [0, 0],
+    passengers: [],
     goingUp: true,
-    wantsUp: [0,1],
-    wantsDown: [2],
+    wantsUp: [],
+    wantsDown: [],
     reverseFlag: false
 }
 
@@ -91,10 +99,10 @@ export default function reducer(state=initialState, action) {
             currentFloor = newFloor[action.payload[0]]
             currentFloor.push(action.payload[1][0])
             newFloor.splice(action.payload[0], 1, currentFloor)
-            if(action.payload[1][0] > 9-action.payload[0]){
-                newWantsUp.push(9-action.payload[0]);
-            } else if(action.payload[1][0] < 9-action.payload[0]){
-                newWantsDown.push(9-action.payload[0]);
+            if(action.payload[1][0] > topFloorNumber-action.payload[0]){
+                newWantsUp.push(topFloorNumber-action.payload[0]);
+            } else if(action.payload[1][0] < topFloorNumber-action.payload[0]){
+                newWantsDown.push(topFloorNumber-action.payload[0]);
             }
             return Object.assign({}, state, {floor: newFloor, wantsUp: newWantsUp, wantsDown: newWantsDown});
         
@@ -113,23 +121,23 @@ export default function reducer(state=initialState, action) {
             let updateWantsUp = [...state.wantsUp];
             let updateWantsDown = [...state.wantsDown];
             if(state.goingUp === true ){
-                toLoad = state.floor[9-state.currentFloor].filter( ele => ele > state.currentFloor)
-                toStay = state.floor[9-state.currentFloor].filter( ele => ele < state.currentFloor)
+                toLoad = state.floor[topFloorNumber-state.currentFloor].filter( ele => ele > state.currentFloor)
+                toStay = state.floor[topFloorNumber-state.currentFloor].filter( ele => ele < state.currentFloor)
                 updateWantsUp = updateWantsUp.filter(ele => ele !== state.currentFloor)
             } else {
-                toLoad = state.floor[9-state.currentFloor].filter( ele => ele < state.currentFloor)
-                toStay = state.floor[9-state.currentFloor].filter( ele => ele > state.currentFloor)
+                toLoad = state.floor[topFloorNumber-state.currentFloor].filter( ele => ele < state.currentFloor)
+                toStay = state.floor[topFloorNumber-state.currentFloor].filter( ele => ele > state.currentFloor)
                 updateWantsDown = updateWantsDown.filter(ele => ele !== state.currentFloor)
             }
             if(state.reverseFlag === true){
-                toLoad = state.floor[9-state.currentFloor];
+                toLoad = state.floor[topFloorNumber-state.currentFloor];
                 updateWantsUp = [];
                 updateWantsDown = [];
             }
             newPassengers = [...state.passengers, ...toLoad];
             console.log(newPassengers)
             newFloor = [...state.floor];
-            newFloor.splice(9-state.currentFloor, 1, toStay)
+            newFloor.splice(topFloorNumber-state.currentFloor, 1, toStay)
             return Object.assign({}, state, {passengers: newPassengers, floor: newFloor, wantsUp: updateWantsUp, wantsDown: updateWantsDown});
 
         case CHANGE_FLOOR:
@@ -137,7 +145,7 @@ export default function reducer(state=initialState, action) {
             let newGoingUp = state.goingUp;
             if(action.payload === 'up'){
                 newFloorLevel++;
-                if(newFloorLevel === 9) newGoingUp = false;
+                if(newFloorLevel === topFloorNumber) newGoingUp = false;
             } else if(action.payload === 'down'){
                 newFloorLevel--;
                 if(newFloorLevel === 0) newGoingUp = true;

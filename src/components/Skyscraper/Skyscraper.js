@@ -21,23 +21,27 @@ class Skyscraper extends Component {
         this.reverseStep = this.reverseStep.bind(this);
     }
     
+    //Invokes elevatorBrains method onclick
     startElevator(){
         // setInterval(this.elevatorBrains, 1000)
         this.elevatorBrains();
     }
 
+    //Starts loadStep Method
     elevatorBrains(){
         this.loadStep();        
     }
 
-    loadStep(){
-        console.log(this.props.floor)
-        console.log(this.props.floor[this.state.topFloorNumber-1])        
+    //Handles loading and unloading of passengers
+    loadStep(){     
+        //If there is a passenger with the same value of the current floor, 
+        // invokes unloadPassengers in the reducer
         if(this.props.passengers.includes(this.props.currentFloor)){
             this.props.unloadPassengers();
         }
+        //If there is a queue on the current floor, invokes loadPassengers
+        // in the reducer and sets the loadFlag to true, then invokes moveStep
         if(this.props.floor[this.state.topFloorNumber-this.props.currentFloor].length > 0){
-            console.log(`load passengers from floor: ${this.state.topFloorNumber-this.props.currentFloor}`)
             this.props.loadPassengers();
             this.setState({loadFlag: true}, () => this.moveStep())
         } else {
@@ -45,30 +49,31 @@ class Skyscraper extends Component {
         }
     }
 
+    //Handles moving floors
     moveStep(){        
         if(this.props.goingUp === true || this.props.currentFloor === 0){
-            console.log('going up or on floor 0')
+            //console.log('going up or on floor 0')
             if(this.props.passengers.some(passenger => passenger > this.props.currentFloor)){
-                console.log('passenger to floor above current')
+                // console.log('passenger to floor above current')
                 this.props.changeFloor('up');
             } else if (this.props.wantsUp.some(ele => ele > this.props.currentFloor)){
-                console.log('someone wants up on floor above')
+                // console.log('someone wants up on floor above')
                 this.props.changeFloor('up');
             } else if(this.props.wantsUp.length > 0){
-                console.log('someone wants up on floor below')
+                // console.log('someone wants up on floor below')
                 this.props.changeFloor('down');
                 this.props.reverseFlag();
             }
         } else if(this.props.goingUp === false || this.props.currentFloor === this.state.topFloorNumber){
-            console.log('going down or on floor this.state.topFloorNumber')
+            // console.log('going down or on floor this.state.topFloorNumber')
             if(this.props.passengers.some(passenger => passenger < this.props.currentFloor)){
-                console.log('passenger to floor below current')
+                // console.log('passenger to floor below current')
                 this.props.changeFloor('down');
             } else if (this.props.wantsDown.some(ele => ele < this.props.currentFloor)){
-                console.log('someone wants down on floor below')
+                // console.log('someone wants down on floor below')
                 this.props.changeFloor('down');
             } else if(this.props.wantsDown.length > 0){
-                console.log('someone wants down on floor above')
+                // console.log('someone wants down on floor above')
                 this.props.changeFloor('up');
                 this.props.reverseFlag();
             }
@@ -76,46 +81,51 @@ class Skyscraper extends Component {
         this.reverseStep();
     }
 
+    //Handles reversing the direction of the elevator
     reverseStep(){
-        console.log('reverse step - loadFlag: '+ this.state.loadFlag)
+        // console.log('reverse step - loadFlag: '+ this.state.loadFlag)
         if(!this.state.loadFlag){
             if(this.props.passengers.length === 0){
-                console.log('no passengers')
+                // console.log('no passengers')
                 if(this.props.goingUp === true && !this.props.wantsUp.some(ele => ele > this.props.currentFloor)){
-                    console.log('going up reverse')
+                    // console.log('going up reverse')
                     this.props.reverseDirection();
                 } else if(this.props.goingUp === false && !this.props.wantsDown.some(ele => ele < this.props.currentFloor)){
-                    console.log('going down reverse')
+                    // console.log('going down reverse')
                     this.props.reverseDirection();
                 } else {
-                    console.log('failed both ifs')
+                    // console.log('failed both ifs')
                 }
             }
         }
         this.setState({loadFlag: false})
     }
 
+    //Handles the onChange from select options
     updateFloor(e, floorNumber){
         e = parseInt(e)
         this.props.updateFloor(floorNumber, [e]);
     }
 
     render() {
-        console.log(this.props)
         let floors = this.props.floor;
+        //JSX to create each floor
         let jsxFloors = floors.map( (floor, i) => {
+            //JSX to create select options
             let jsxFloorOptions = this.props.floor.map((ele, j) => {
                 if(this.state.topFloorNumber-j !== i){
                     return <option key={j}>{j}</option>;
                 }
             })
+            //Creates a string of numbers representing the queue
             let floorString = '';
             if(floor.length > 0){
                 floorString = floor.join(', ');
             }
+            //If the car is on the current floor returns this
             if(this.props.currentFloor === this.state.topFloorNumber-i){
                 return (
-                    <div className="skyscraper-floor">
+                    <div className="skyscraper-floor" key={i}>
                         <div className="skyscraper-car-left"></div>
                         <div className="skyscraper-car-right"></div>
                         <div className="skyscraper-queue">
@@ -131,8 +141,9 @@ class Skyscraper extends Component {
                     </div>
                 )
             }
+            //Normal non-car floor
             return (
-                <div className="skyscraper-floor">
+                <div className="skyscraper-floor" key={i}>
                     <div className="skyscraper-shaft-left"></div>
                     <div className="skyscraper-shaft-right"></div>
                     <div className="skyscraper-queue">

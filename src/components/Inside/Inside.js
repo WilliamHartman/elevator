@@ -5,6 +5,7 @@ import stickman from '../../assets/stickman.png';
 
 class Inside extends Component {
     render() {
+        //JSX to create each person in the inside view
         let jsxPassengers = this.props.passengers.map((passenger, i) => {
         return (
             <div key={i}>

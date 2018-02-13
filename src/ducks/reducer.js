@@ -1,23 +1,13 @@
+//Sets the max number of floors
 const topFloorNumber = 19;
 
+//Builds the initialState floor
 let floorInit = [];
 for(let i=0; i<=topFloorNumber; i++){
     floorInit.push([]);
 }
 
 const initialState = {
-    // floor: [
-    //     [],
-    //     [],
-    //     [],
-    //     [],
-    //     [],
-    //     [],
-    //     [],
-    //     [1],
-    //     [4],
-    //     [1,2,3,2,1]
-    // ],
     floor: [...floorInit],
     currentFloor: 0,
     passengers: [],
@@ -97,8 +87,11 @@ export default function reducer(state=initialState, action) {
             let newWantsDown = [...state.wantsDown];
             newFloor = [...state.floor];
             currentFloor = newFloor[action.payload[0]]
+            //Pushes the new member in the queue to the temporary currentFloor
             currentFloor.push(action.payload[1][0])
+            //Replaces old currentFloor with temporary
             newFloor.splice(action.payload[0], 1, currentFloor)
+            //Pushes the floor level to the corrent wantsUp/wantsDown array
             if(action.payload[1][0] > topFloorNumber-action.payload[0]){
                 newWantsUp.push(topFloorNumber-action.payload[0]);
             } else if(action.payload[1][0] < topFloorNumber-action.payload[0]){
@@ -112,6 +105,7 @@ export default function reducer(state=initialState, action) {
 
         case UNLOAD_PASSENGERS:
             newPassengers = [...state.passengers];
+            //Removes passengers who equal the current floor
             let tempPass = newPassengers.filter( (ele) => ele !== state.currentFloor);
             return Object.assign({}, state, {passengers: tempPass});
 
@@ -120,22 +114,26 @@ export default function reducer(state=initialState, action) {
             let toStay = [];
             let updateWantsUp = [...state.wantsUp];
             let updateWantsDown = [...state.wantsDown];
+            //If the elevator is going up, loads the queue members with higher numbers,
+            // removes them from the currentfloor queue, removes floor from wantsUp
             if(state.goingUp === true ){
                 toLoad = state.floor[topFloorNumber-state.currentFloor].filter( ele => ele > state.currentFloor)
                 toStay = state.floor[topFloorNumber-state.currentFloor].filter( ele => ele < state.currentFloor)
                 updateWantsUp = updateWantsUp.filter(ele => ele !== state.currentFloor)
+            //If the elevator is going down, loads the queue members with lower numbers,
+            // removes them from the currentfloor queue, removes floor from wantsdown
             } else {
                 toLoad = state.floor[topFloorNumber-state.currentFloor].filter( ele => ele < state.currentFloor)
                 toStay = state.floor[topFloorNumber-state.currentFloor].filter( ele => ele > state.currentFloor)
                 updateWantsDown = updateWantsDown.filter(ele => ele !== state.currentFloor)
             }
+            //If the reverseflag is true, load all
             if(state.reverseFlag === true){
                 toLoad = state.floor[topFloorNumber-state.currentFloor];
                 updateWantsUp = [];
                 updateWantsDown = [];
             }
             newPassengers = [...state.passengers, ...toLoad];
-            console.log(newPassengers)
             newFloor = [...state.floor];
             newFloor.splice(topFloorNumber-state.currentFloor, 1, toStay)
             return Object.assign({}, state, {passengers: newPassengers, floor: newFloor, wantsUp: updateWantsUp, wantsDown: updateWantsDown});
@@ -143,6 +141,8 @@ export default function reducer(state=initialState, action) {
         case CHANGE_FLOOR:
             let newFloorLevel = state.currentFloor;
             let newGoingUp = state.goingUp;
+            //Add 1 to floor if going up, subtract if going down
+            //If on top or bottom floor, reverse goingUp
             if(action.payload === 'up'){
                 newFloorLevel++;
                 if(newFloorLevel === topFloorNumber) newGoingUp = false;

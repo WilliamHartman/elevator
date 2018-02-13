@@ -4,7 +4,9 @@ import { connect } from 'react-redux';
 
 class Buttons extends Component {
     render() {
+        //JSX to create the buttons
         let jsxButtons = this.props.floor.map((ele, i) => {
+            //If there is a passenger wanting to go to the floor, makes background green
             if(this.props.passengers.includes(i)){
                 return (
                     <div key={i} className="buttons-container">
@@ -15,6 +17,7 @@ class Buttons extends Component {
                         </div>
                     </div>
                 )
+                // Else background is whitesmoke color
             } else {
                 return (
                     <div key={i} className="buttons-container">
